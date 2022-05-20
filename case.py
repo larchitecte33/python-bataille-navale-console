@@ -4,7 +4,10 @@ class Case:
         self.__x = x
         self.__y = y
         self.__touchee = False
+        self.__numero_occupant = -1
+
     
+    # Accesseurs
     def get_touchee(self):
         return self.__touchee
 
@@ -16,3 +19,9 @@ class Case:
 
     def get_alpha(self):
         return self.__x, ' ', self.__y
+
+    def get_numero_occupant(self):
+        return self.__numero_occupant
+
+    def set_numero_occupant(self, numero):
+        self.__numero_occupant = numero
