@@ -122,6 +122,7 @@ class Plateau:
 
                     is_bateau_place = True
 
+            print('VOTRE PLATEAU')
             self.afficher()
         except ValueError as inst:
             print(inst)

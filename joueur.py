@@ -11,6 +11,7 @@ class Joueur:
     def __init__(self, nom):
         self.__nom = nom
         self.__plateau = NULL
+        self.__plateau_adversaire = NULL
 
     # Permet d'attribuer un plateau au joueur
     def attribuer_plateau(self):
@@ -31,8 +32,14 @@ class Joueur:
         p = Plateau(cases, nb_lignes, nb_colonnes)
         self.__plateau = p
 
+        p_adversaire = Plateau(cases, nb_lignes, nb_colonnes)
+        self.__plateau_adversaire = p_adversaire
+
     # Permet d'afficher le plateau du joueur
     def afficher_plateau(self):
+        print('PLATEAU ADVERSAIRE')
+        self.__plateau_adversaire.afficher()
+        print('VOTRE PLATEAU')
         self.__plateau.afficher()
         print('')
 
