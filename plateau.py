@@ -30,7 +30,11 @@ class Plateau:
                     ligne += ','
 
                 if(self.__cases[i][j].get_touchee() == True):
-                    ligne += 'X'
+#                    ligne += str(self.__cases[i][j].get_numero_occupant())
+                    if self.__cases[i][j].get_numero_occupant() > 0:
+                        ligne += 'X'
+                    else:
+                        ligne += '+'
                 elif self.__cases[i][j].get_numero_occupant() != -1:
                     ligne += str(self.__cases[i][j].get_numero_occupant())
                 else:

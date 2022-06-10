@@ -32,7 +32,19 @@ class Joueur:
         p = Plateau(cases, nb_lignes, nb_colonnes)
         self.__plateau = p
 
-        p_adversaire = Plateau(cases, nb_lignes, nb_colonnes)
+
+        cases_adversaire = []
+
+        for i in range(nb_lignes):
+            ligne = []
+
+            for j in range(nb_colonnes):
+                c = Case(i,j)
+                ligne.append(c)
+
+            cases_adversaire.append(ligne)
+
+        p_adversaire = Plateau(cases_adversaire, nb_lignes, nb_colonnes)
         self.__plateau_adversaire = p_adversaire
 
     # Permet d'afficher le plateau du joueur
@@ -43,8 +55,27 @@ class Joueur:
         self.__plateau.afficher()
         print('')
 
+    def est_occupe(self, x, y):
+        return self.__plateau.get_case(x, y).get_numero_occupant() > 0
+
+    def set_occupe(self, x, y):
+        self.__plateau_adversaire.get_case(x, y).set_numero_occupant(1)
+
+    # Permet de réceptionner un tir sur le plateau du joueur
+    # Paramètres =>
+    #   x : position en x du tir
+    #   y : position en y du tir
     def attaquer(self, x, y):
         self.__plateau.get_case(x, y).set_touchee(True)
+        
+
+    # Permet d'afficher un tir sur le plateau de l'adversaire
+    # Paramètres =>
+    #   x : position en x du tir
+    #   y : position en y du tir
+    def attaquer_adversaire(self, x, y):
+        #self.__plateau_adversaire.get_case(x, y).set_numero_occupant(1)
+        self.__plateau_adversaire.get_case(x, y).set_touchee(True)
 
     # Permet au joueur de choisir l'emplacement de ses bateaux
     # Paramètres =>
