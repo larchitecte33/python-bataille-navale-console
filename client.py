@@ -44,60 +44,69 @@ print(num_joueur, ' - Pret a jouer')
 
 j.choisir_emplacement_bateaux(bateaux)
 
+
 client.sendall(b'test')
 
 while not quit:
     #try:
-    #client.sendall(b'getUser')
     num_joueur_en_cours = client.recv(1024).decode('ascii')
-    today = datetime.now()
-    print(today, 'num_joueur_en_cours = ', num_joueur_en_cours)
-    print(today, 'num_joueur = ', num_joueur)
 
     if num_joueur_en_cours != num_joueur:
         print('Ce n\'est pas à vous de jouer')
         entree = "----"
+        is_coule = False
         client.sendall(entree.encode('utf-8'))
 
         position_tir = client.recv(1024).decode('utf-8')
 
         if position_tir != "-:-":
-            j.attaquer(int(position_tir[0]), int(position_tir[2]))       
+            is_coule = j.attaquer(int(position_tir[0]), int(position_tir[2]))       
 
-        if j.est_occupe(int(position_tir[0]), int(position_tir[2])):
+        if is_coule:
+            client.sendall("C".encode('utf-8'))
+        elif j.est_occupe(int(position_tir[0]), int(position_tir[2])):
             client.sendall("X".encode('utf-8'))
         else:
             client.sendall("+".encode('utf-8'))
 
         j.afficher_plateau()
     else:
-        print('Quelle case souhaitez-vous attaquer ?')
-        position_tir = input()
+        position_tir = "-:-"
 
-        if not re.match('.:.', position_tir):
-            print('L\'emplacement fourni ne respecte pas le format x:y')
-            position_tir = "-:-"
-        elif(not position_tir[0].isnumeric()) or (not position_tir[2].isnumeric()):
-            print('L\'emplacement fourni est invalide')
-            position_tir = "-:-"
-        elif (int(position_tir[0]) < 0) or (int(position_tir[0]) > 9) or (int(position_tir[2]) < 0) or (int(position_tir[2]) > 9):
-            print('L\'emplacement fourni est invalide')
-            position_tir = "-:-"
-        
-        client.sendall(position_tir.encode('utf-8'))
+        while position_tir == "-:-":
+            print('Quelle case souhaitez-vous attaquer ?')
+            position_tir = input()
+
+            if not re.match('.:.', position_tir):
+                print('L\'emplacement fourni ne respecte pas le format x:y')
+                position_tir = "-:-"
+            elif len(position_tir) != 3:
+                print('L\'emplacement fourni ne respecte pas le format x:y')
+                position_tir = "-:-"
+            elif(not position_tir[0].isnumeric()) or (not position_tir[2].isnumeric()):
+                print('L\'emplacement fourni est invalide')
+                position_tir = "-:-"
+            elif (int(position_tir[0]) < 0) or (int(position_tir[0]) > 9) or (int(position_tir[2]) < 0) or (int(position_tir[2]) > 9):
+                print('L\'emplacement fourni est invalide')
+                position_tir = "-:-"
+             
 
         if position_tir != "-:-":
+            client.sendall(position_tir.encode('utf-8'))
             est_touche = client.recv(1024).decode('utf-8')
 
-            print("est_touche = ", est_touche)
-
-            if est_touche == "X":
+            if est_touche == "C":
+                print("Coulé !!!")
                 j.set_occupe(int(position_tir[0]), int(position_tir[2]))
+            elif est_touche == "X":
+                print("Touché !!!")
+                j.set_occupe(int(position_tir[0]), int(position_tir[2]))
+            else:
+                print("Dans l'eau")
 
-            # if j.est_occupe(int(position_tir[0], int(position_tir[2]))):
             j.attaquer_adversaire(int(position_tir[0]), int(position_tir[2]))
 
-        j.afficher_plateau()
+            j.afficher_plateau()
 
     #except:
     #    print("Une erreur est survenue")

@@ -10,9 +10,6 @@ class Plateau:
 
     # Affichage du plateau
     def afficher(self):
-        #print(self.__cases[0][0].get_alpha())
-        #print(self.__cases[0][1].get_alpha())
-        
         ligne = '  '
 
         for i in range(self.__nb_colonnes):
@@ -30,7 +27,6 @@ class Plateau:
                     ligne += ','
 
                 if(self.__cases[i][j].get_touchee() == True):
-#                    ligne += str(self.__cases[i][j].get_numero_occupant())
                     if self.__cases[i][j].get_numero_occupant() > 0:
                         ligne += 'X'
                     else:
@@ -111,6 +107,11 @@ class Plateau:
                     for i in range(y_deb_int, y_fin_int + 1):
                         self.__cases[x_deb_int][i].set_numero_occupant(bateau.get_numero())
 
+                    bateau.set_x_deb(x_deb_int)
+                    bateau.set_x_fin(x_fin_int)
+                    bateau.set_y_deb(y_deb_int)
+                    bateau.set_y_fin(y_fin_int)
+
                     is_bateau_place = True
             # Si le bateau est à l'horizontale
             else:
@@ -119,10 +120,13 @@ class Plateau:
                 elif not self.is_zone_libre(x_deb_int, x_fin_int, y_deb_int, y_fin_int):
                     print('La zone de dépose du bateau est déjà occupée.')
                 else:
-                    print('Numéro bateau : ', bateau.get_numero())
-
                     for i in range(x_deb_int, x_fin_int + 1):
                         self.__cases[i][y_deb_int].set_numero_occupant(bateau.get_numero())
+
+                    bateau.set_x_deb(x_deb_int)
+                    bateau.set_x_fin(x_fin_int)
+                    bateau.set_y_deb(y_deb_int)
+                    bateau.set_y_fin(y_fin_int)
 
                     is_bateau_place = True
 

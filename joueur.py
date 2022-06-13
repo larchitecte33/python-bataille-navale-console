@@ -12,6 +12,7 @@ class Joueur:
         self.__nom = nom
         self.__plateau = NULL
         self.__plateau_adversaire = NULL
+        self.__bateaux = []
 
     # Permet d'attribuer un plateau au joueur
     def attribuer_plateau(self):
@@ -65,8 +66,37 @@ class Joueur:
     # Paramètres =>
     #   x : position en x du tir
     #   y : position en y du tir
+    # Renvoie True si le bateau a été coulé False sinon
     def attaquer(self, x, y):
         self.__plateau.get_case(x, y).set_touchee(True)
+
+        is_bateau_trouve = False
+        nom_bateau = ""
+        i = 0
+
+        while (not is_bateau_trouve) and (i < len(self.__bateaux)):
+            nom_bateau = self.__bateaux[i].get_nom()
+            
+            if x in range(self.__bateaux[i].get_x_deb(), self.__bateaux[i].get_x_fin() + 1) and y in range(self.__bateaux[i].get_y_deb(), self.__bateaux[i].get_y_fin() + 1):
+                if self.__bateaux[i].get_x_deb() == self.__bateaux[i].get_x_fin(): # Bateau à la verticale
+                    is_bateau_trouve = True
+                    
+                    for j in range(self.__bateaux[i].get_y_deb(), self.__bateaux[i].get_y_fin() + 1):
+                        if not self.__plateau.get_case(self.__bateaux[i].get_x_deb(), j).get_touchee():
+                            is_bateau_trouve = False
+                else: # Bateau à l'horizontale
+                    is_bateau_trouve = True
+                    
+                    for j in range(self.__bateaux[i].get_x_deb(), self.__bateaux[i].get_x_fin() + 1):
+                        if not self.__plateau.get_case(j, self.__bateaux[i].get_y_deb()).get_touchee():
+                            is_bateau_trouve = False
+
+            i = i + 1
+
+        if is_bateau_trouve:
+            print("Votre ", nom_bateau, " a été coulé !!!")
+            return True
+        return False
         
 
     # Permet d'afficher un tir sur le plateau de l'adversaire
@@ -74,7 +104,6 @@ class Joueur:
     #   x : position en x du tir
     #   y : position en y du tir
     def attaquer_adversaire(self, x, y):
-        #self.__plateau_adversaire.get_case(x, y).set_numero_occupant(1)
         self.__plateau_adversaire.get_case(x, y).set_touchee(True)
 
     # Permet au joueur de choisir l'emplacement de ses bateaux
@@ -99,6 +128,7 @@ class Joueur:
                 y_fin = emplacement[6]
                 
                 if self.__plateau.definir_position_bateau(bateaux[i], x_deb, x_fin, y_deb, y_fin):
+                    self.__bateaux.append(bateaux[i])
                     i = i + 1
             else:
                 print('L\'emplacement fourni ne respecte pas le format x_deb:y_deb-x_fin:y_fin')

@@ -21,3 +21,33 @@ class Bateau:
 
     def get_longueur(self):
         return self.longueur
+
+    def get_coule(self):
+        return self.is_coule
+
+    def set_coule(self, coule):
+        self.is_coule = coule
+
+    def set_x_deb(self, x_deb):
+        self.x_deb = x_deb
+
+    def get_x_deb(self):
+        return self.x_deb
+
+    def set_y_deb(self, y_deb):
+        self.y_deb = y_deb
+
+    def get_y_deb(self):
+        return self.y_deb
+
+    def set_x_fin(self, x_fin):
+        self.x_fin = x_fin
+
+    def get_x_fin(self):
+        return self.x_fin
+
+    def set_y_fin(self, y_fin):
+        self.y_fin = y_fin
+
+    def get_y_fin(self):
+        return self.y_fin

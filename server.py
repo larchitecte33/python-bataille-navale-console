@@ -41,32 +41,33 @@ def jouer():
 
     while True:
         broadcast(str(num_joueur))
-        #clients[num_joueur].send("coucou".encode('ascii'))
         
         position_tir = clients[num_joueur - 1].recv(1024)
 
         if num_joueur == 1:
             clients[1].recv(1024)
-            print("test1")
         else:
             clients[0].recv(1024)
-            print("test2")
 
         position_tir = position_tir.decode('utf-8')
-        print("posiion_tir = ", position_tir)
 
         if position_tir != "-:-":
-            print("position_tir : ", position_tir)
             if num_joueur == 1:
                 clients[1].sendall(position_tir.encode('utf-8'))
-                clients[0].sendall(clients[1].recv(1024)) # Réception de l'information "touché"
-                num_joueur = 2
+
+                is_touche = clients[1].recv(1024) # Réception de l'information "touché"
+                clients[0].sendall(is_touche) 
+                
+                if is_touche.decode('utf-8') != "C" and is_touche.decode('utf-8') != "X":
+                    num_joueur = 2
             else:
                 clients[0].sendall(position_tir.encode('utf-8'))
-                clients[1].sendall(clients[0].recv(1024)) # Réception de l'information "touché"
-                num_joueur = 1
 
-            print("num_joueur = ", num_joueur)
+                is_touche = clients[0].recv(1024) # Réception de l'information "touché"
+                clients[1].sendall(is_touche) 
+
+                if is_touche.decode('utf-8') != "C" and is_touche.decode('utf-8') != "X":
+                    num_joueur = 1
 
 
 accueilirJoueurs()
