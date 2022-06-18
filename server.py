@@ -40,7 +40,15 @@ def jouer():
     num_joueur = 1
 
     while True:
-        broadcast(str(num_joueur))
+        # print('Avant broadcast')
+        # broadcast(str(num_joueur))
+        # print('Après broadcast')
+
+        clients[0].recv(1024)
+        clients[1].recv(1024)
+
+        clients[0].sendall(str(num_joueur).encode('utf-8'))
+        clients[1].sendall(str(num_joueur).encode('utf-8'))
         
         position_tir = clients[num_joueur - 1].recv(1024)
 

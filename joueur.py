@@ -14,6 +14,31 @@ class Joueur:
         self.__plateau_adversaire = NULL
         self.__bateaux = []
 
+    def get_bateaux(self): 
+        return self.__bateaux
+
+    def get_bateau(self, x, y):
+        i = 0
+        est_trouve = False
+
+        print("x = ", x)
+        print("y = ", y)
+
+        while (not est_trouve) and (i < len(self.__bateaux)):
+            print("x_deb = ", self.__bateaux[i].get_x_deb())
+            print("x_fin = ", self.__bateaux[i].get_x_fin())
+            print("y_deb = ", self.__bateaux[i].get_y_deb())
+            print("y_fin = ", self.__bateaux[i].get_y_fin())
+
+            if self.__bateaux[i].get_x_deb() >= x and self.__bateaux[i].get_x_fin() <= x and self.__bateaux[i].get_y_deb() >= y and self.__bateaux[i].get_y_fin() <= y:
+                print("coucou")
+                est_trouve = True
+                return self.__bateaux[i]
+
+            i = i + 1
+
+        return NULL
+
     # Permet d'attribuer un plateau au joueur
     def attribuer_plateau(self):
         nb_lignes = 10
@@ -32,6 +57,7 @@ class Joueur:
 
         p = Plateau(cases, nb_lignes, nb_colonnes)
         self.__plateau = p
+        p.set_joueur(self)
 
 
         cases_adversaire = []
@@ -60,7 +86,36 @@ class Joueur:
         return self.__plateau.get_case(x, y).get_numero_occupant() > 0
 
     def set_occupe(self, x, y):
+        est_bateau_coule = True
+        est_case_touchee = True
+        i = 0
+
+        self.__plateau_adversaire.get_case(x, y).set_touchee(True)
+
+        """
+        bateau = self.get_bateau(x, y)
+
+        if bateau != NULL:
+            print("bateau = ", bateau)
+
+            # Si le bateau est en position verticale
+            if bateau.get_x_deb() == bateau.get_x_fin():
+                for i in range(bateau.get_y_deb(), bateau.get_y_fin()):
+                    if not self.__plateau_adversaire.get_case(bateau.get_x_deb(), i).get_touchee():
+                        est_bateau_coule = False
+            # Si le bateau est en position horizontale
+            else:
+                for i in range(bateau.get_x_deb(), bateau.get_x_fin()):
+                    if not self.__plateau_adversaire.get_case(i, bateau.get_y_deb()).get_touchee():
+                        est_bateau_coule = False
+
+            if est_bateau_coule:
+                print("!!!! coulé !!!!")
+                bateau.set_coule(True)    
+        """
+
         self.__plateau_adversaire.get_case(x, y).set_numero_occupant(1)
+
 
     # Permet de réceptionner un tir sur le plateau du joueur
     # Paramètres =>
@@ -73,6 +128,7 @@ class Joueur:
         is_bateau_trouve = False
         nom_bateau = ""
         i = 0
+        i_bateau_coule = -1
 
         while (not is_bateau_trouve) and (i < len(self.__bateaux)):
             nom_bateau = self.__bateaux[i].get_nom()
@@ -80,12 +136,14 @@ class Joueur:
             if x in range(self.__bateaux[i].get_x_deb(), self.__bateaux[i].get_x_fin() + 1) and y in range(self.__bateaux[i].get_y_deb(), self.__bateaux[i].get_y_fin() + 1):
                 if self.__bateaux[i].get_x_deb() == self.__bateaux[i].get_x_fin(): # Bateau à la verticale
                     is_bateau_trouve = True
+                    i_bateau_coule = i
                     
                     for j in range(self.__bateaux[i].get_y_deb(), self.__bateaux[i].get_y_fin() + 1):
                         if not self.__plateau.get_case(self.__bateaux[i].get_x_deb(), j).get_touchee():
                             is_bateau_trouve = False
                 else: # Bateau à l'horizontale
                     is_bateau_trouve = True
+                    i_bateau_coule = i
                     
                     for j in range(self.__bateaux[i].get_x_deb(), self.__bateaux[i].get_x_fin() + 1):
                         if not self.__plateau.get_case(j, self.__bateaux[i].get_y_deb()).get_touchee():
@@ -94,6 +152,7 @@ class Joueur:
             i = i + 1
 
         if is_bateau_trouve:
+            self.__bateaux[i_bateau_coule].set_coule(True)
             print("Votre ", nom_bateau, " a été coulé !!!")
             return True
         return False

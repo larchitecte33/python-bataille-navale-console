@@ -8,8 +8,33 @@ class Plateau:
         self.__nb_lignes = nb_lignes
         self.__nb_colonnes = nb_colonnes
 
+    def get_case(self, x, y):
+        return self.__cases[x][y]
+
+    def set_joueur(self, joueur):
+        self.__joueur = joueur
+
     # Affichage du plateau
     def afficher(self):
+        #print(dir(self))
+
+        if hasattr(self, "_Plateau__joueur"):
+            bateaux = self.__joueur.get_bateaux()
+
+            for i in range(0, len(bateaux)):
+                if bateaux[i].get_coule():
+                    #print("Coulé - x_deb : ", bateaux[i].get_x_deb())
+                    #print("Coulé - x_fin : ", bateaux[i].get_x_fin())
+                    #print("Coulé - y_deb : ", bateaux[i].get_y_deb())
+                    #print("Coulé - y_fin : ", bateaux[i].get_y_fin())
+
+                    for j in range(bateaux[i].get_x_deb(), bateaux[i].get_x_fin() + 1):
+                        for k in range(bateaux[i].get_y_deb(), bateaux[i].get_y_fin() + 1):
+                            #print("j = ", j)
+                            #print("k = ", k)
+                            self.__cases[j][k].set_numero_occupant(10)     
+
+        
         ligne = '  '
 
         for i in range(self.__nb_colonnes):
@@ -27,7 +52,11 @@ class Plateau:
                     ligne += ','
 
                 if(self.__cases[i][j].get_touchee() == True):
-                    if self.__cases[i][j].get_numero_occupant() > 0:
+                    #print("N° occupant : ", self.__cases[i][j].get_numero_occupant())
+
+                    if self.__cases[i][j].get_numero_occupant() == 10:
+                        ligne += 'C'
+                    elif self.__cases[i][j].get_numero_occupant() > 0:
                         ligne += 'X'
                     else:
                         ligne += '+'

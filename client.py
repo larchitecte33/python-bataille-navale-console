@@ -49,7 +49,8 @@ client.sendall(b'test')
 
 while not quit:
     #try:
-    num_joueur_en_cours = client.recv(1024).decode('ascii')
+    client.sendall("P".encode('utf-8'))
+    num_joueur_en_cours = client.recv(1024).decode('utf-8')
 
     if num_joueur_en_cours != num_joueur:
         print('Ce n\'est pas à vous de jouer')
