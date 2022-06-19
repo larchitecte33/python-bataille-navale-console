@@ -5,6 +5,7 @@ from bateau import Bateau
 from datetime import datetime
 
 quit = False
+nb_coule = 0
 
 print('Quel est votre nom ?')
 nom_joueur = input()
@@ -70,6 +71,10 @@ while not quit:
         else:
             client.sendall("+".encode('utf-8'))
 
+        if j.verif_perdu():
+            print('Vous avez perdu.')
+            quit = True
+
         j.afficher_plateau()
     else:
         position_tir = "-:-"
@@ -99,6 +104,11 @@ while not quit:
             if est_touche == "C":
                 print("Coulé !!!")
                 j.set_occupe(int(position_tir[0]), int(position_tir[2]))
+                nb_coule = nb_coule + 1
+
+                if nb_coule >= 5:
+                    print("Vous avez gagné !")
+                    quit = True
             elif est_touche == "X":
                 print("Touché !!!")
                 j.set_occupe(int(position_tir[0]), int(position_tir[2]))

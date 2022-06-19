@@ -86,34 +86,7 @@ class Joueur:
         return self.__plateau.get_case(x, y).get_numero_occupant() > 0
 
     def set_occupe(self, x, y):
-        est_bateau_coule = True
-        est_case_touchee = True
-        i = 0
-
         self.__plateau_adversaire.get_case(x, y).set_touchee(True)
-
-        """
-        bateau = self.get_bateau(x, y)
-
-        if bateau != NULL:
-            print("bateau = ", bateau)
-
-            # Si le bateau est en position verticale
-            if bateau.get_x_deb() == bateau.get_x_fin():
-                for i in range(bateau.get_y_deb(), bateau.get_y_fin()):
-                    if not self.__plateau_adversaire.get_case(bateau.get_x_deb(), i).get_touchee():
-                        est_bateau_coule = False
-            # Si le bateau est en position horizontale
-            else:
-                for i in range(bateau.get_x_deb(), bateau.get_x_fin()):
-                    if not self.__plateau_adversaire.get_case(i, bateau.get_y_deb()).get_touchee():
-                        est_bateau_coule = False
-
-            if est_bateau_coule:
-                print("!!!! coulé !!!!")
-                bateau.set_coule(True)    
-        """
-
         self.__plateau_adversaire.get_case(x, y).set_numero_occupant(1)
 
 
@@ -156,6 +129,18 @@ class Joueur:
             print("Votre ", nom_bateau, " a été coulé !!!")
             return True
         return False
+
+    def verif_perdu(self):
+        perdu = True
+        i = 0
+
+        while perdu and (i < len(self.__bateaux)):
+            if not self.__bateaux[i].get_coule():
+                perdu = False
+
+            i = i + 1
+
+        return perdu
         
 
     # Permet d'afficher un tir sur le plateau de l'adversaire

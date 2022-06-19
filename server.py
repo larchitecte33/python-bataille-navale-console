@@ -44,11 +44,14 @@ def jouer():
         # broadcast(str(num_joueur))
         # print('Après broadcast')
 
-        clients[0].recv(1024)
-        clients[1].recv(1024)
+        messageClient1 = clients[1].recv(1024)
+        # print("messageClient1 = ", messageClient1)
 
-        clients[0].sendall(str(num_joueur).encode('utf-8'))
+        messageClient0 = clients[0].recv(1024)
+        # print("messageClient0 = ", messageClient0)
+
         clients[1].sendall(str(num_joueur).encode('utf-8'))
+        clients[0].sendall(str(num_joueur).encode('utf-8'))
         
         position_tir = clients[num_joueur - 1].recv(1024)
 
