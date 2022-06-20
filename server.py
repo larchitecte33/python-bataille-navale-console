@@ -1,4 +1,5 @@
 import socket
+import envoi_reception
 from datetime import datetime
 
 host = '127.0.0.1'                                                      
@@ -29,55 +30,50 @@ def accueilirJoueurs():
     broadcast("Vous etes deux. La partie va commencer.")
 
     print('En attente de la validation du placement des bateaux pour le joueur 1 ...')
-    clients[0].recv(1024)
+    
+    envoi_reception.reception(clients[0], 'joueur1', 'validation_placement_bateaux_1', True)
     print('Validation reçue pour le joueur 1')
 
     print('En attente de la validation du placement des bateaux pour le joueur 2 ...')
-    clients[1].recv(1024)
+    
+    envoi_reception.reception(clients[1], 'joueur2', 'validation_placement_bateaux_2', True)
     print('Validation reçue pour le joueur 2')
 
 def jouer():
     num_joueur = 1
 
     while True:
-        # print('Avant broadcast')
-        # broadcast(str(num_joueur))
-        # print('Après broadcast')
-
-        messageClient1 = clients[1].recv(1024)
-        # print("messageClient1 = ", messageClient1)
-
-        messageClient0 = clients[0].recv(1024)
-        # print("messageClient0 = ", messageClient0)
-
-        clients[1].sendall(str(num_joueur).encode('utf-8'))
-        clients[0].sendall(str(num_joueur).encode('utf-8'))
+        envoi_reception.reception(clients[1], 'joueur2', 'message_client_1', True)
+        envoi_reception.reception(clients[0], 'joueur1', 'message_client_0', True)
         
-        position_tir = clients[num_joueur - 1].recv(1024)
+        envoi_reception.envoi(clients[1], 'joueur2', str(num_joueur), True)
+        envoi_reception.envoi(clients[0], 'joueur1', str(num_joueur), True)
+        
+        position_tir = envoi_reception.reception(clients[num_joueur - 1], 'joueur' + str(num_joueur), 'position_tir', True)
 
         if num_joueur == 1:
-            clients[1].recv(1024)
+            envoi_reception.reception(clients[1], 'joueur2', 'ping', True)
         else:
-            clients[0].recv(1024)
-
-        position_tir = position_tir.decode('utf-8')
+            envoi_reception.reception(clients[0], 'joueur1', 'ping', True)
 
         if position_tir != "-:-":
             if num_joueur == 1:
-                clients[1].sendall(position_tir.encode('utf-8'))
+                envoi_reception.envoi(clients[1], 'joueur2', position_tir, True)
 
-                is_touche = clients[1].recv(1024) # Réception de l'information "touché"
-                clients[0].sendall(is_touche) 
+                is_touche = envoi_reception.reception(clients[1], 'joueur2', 'is_touche', True) # Réception de l'information "touché"
+
+                envoi_reception.envoi(clients[0], 'joueur1', is_touche, True) 
                 
-                if is_touche.decode('utf-8') != "C" and is_touche.decode('utf-8') != "X":
+                if is_touche != "C" and is_touche != "X":
                     num_joueur = 2
             else:
-                clients[0].sendall(position_tir.encode('utf-8'))
+                envoi_reception.envoi(clients[0], 'joueur1', position_tir, True)
 
-                is_touche = clients[0].recv(1024) # Réception de l'information "touché"
-                clients[1].sendall(is_touche) 
+                is_touche = envoi_reception.reception(clients[0], 'joueur1', 'is_touche', True) # Réception de l'information "touché"
 
-                if is_touche.decode('utf-8') != "C" and is_touche.decode('utf-8') != "X":
+                envoi_reception.envoi(clients[1], 'joueur2', is_touche, True)
+
+                if is_touche != "C" and is_touche != "X":
                     num_joueur = 1
 
 

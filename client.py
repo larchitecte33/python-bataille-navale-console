@@ -1,5 +1,6 @@
 import socket
 import re
+import envoi_reception
 from joueur import Joueur
 from bateau import Bateau
 from datetime import datetime
@@ -29,47 +30,39 @@ bateaux.append(b5)
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
 client.connect(('127.0.0.1', 6535))
 
-#try:
-num_joueur = client.recv(1024).decode('ascii')
-today = datetime.now()
-print(today, 'num_joueur = ',  num_joueur)
-#except:
-#    print('Exception')
-#    quit = True
-
-print('reception pret_a_jouer...')
-pret_a_jouer = client.recv(1024).decode('ascii')
-print('pret_a_jouer = ', pret_a_jouer)
+num_joueur = envoi_reception.reception(client, nom_joueur, 'num_joueur', False)
+pret_a_jouer = envoi_reception.reception(client, nom_joueur, 'pret_a_jouer', False)
 
 print(num_joueur, ' - Pret a jouer')
 
 j.choisir_emplacement_bateaux(bateaux)
 
+envoi_reception.envoi(client, 'serveur', 'placement_valide', False)
 
-client.sendall(b'test')
 
 while not quit:
-    #try:
-    client.sendall("P".encode('utf-8'))
-    num_joueur_en_cours = client.recv(1024).decode('utf-8')
+    envoi_reception.envoi(client, 'serveur', 'ping', False)
+
+    num_joueur_en_cours = envoi_reception.reception(client, nom_joueur, 'num_joueur_en_cours', False)
 
     if num_joueur_en_cours != num_joueur:
         print('Ce n\'est pas à vous de jouer')
         entree = "----"
         is_coule = False
-        client.sendall(entree.encode('utf-8'))
+        
+        envoi_reception.envoi(client, 'serveur', entree, False)
 
-        position_tir = client.recv(1024).decode('utf-8')
+        position_tir = envoi_reception.reception(client, nom_joueur, 'position_tir', False)
 
         if position_tir != "-:-":
             is_coule = j.attaquer(int(position_tir[0]), int(position_tir[2]))       
 
         if is_coule:
-            client.sendall("C".encode('utf-8'))
+            envoi_reception.envoi(client, 'serveur', 'C', False)
         elif j.est_occupe(int(position_tir[0]), int(position_tir[2])):
-            client.sendall("X".encode('utf-8'))
+            envoi_reception.envoi(client, 'serveur', 'X', False)
         else:
-            client.sendall("+".encode('utf-8'))
+            envoi_reception.envoi(client, 'serveur', '+', False)
 
         if j.verif_perdu():
             print('Vous avez perdu.')
@@ -98,8 +91,8 @@ while not quit:
              
 
         if position_tir != "-:-":
-            client.sendall(position_tir.encode('utf-8'))
-            est_touche = client.recv(1024).decode('utf-8')
+            envoi_reception.envoi(client, 'serveur', position_tir, False)
+            est_touche = envoi_reception.reception(client, nom_joueur, 'est_touche', False)
 
             if est_touche == "C":
                 print("Coulé !!!")
@@ -118,9 +111,3 @@ while not quit:
             j.attaquer_adversaire(int(position_tir[0]), int(position_tir[2]))
 
             j.afficher_plateau()
-
-    #except:
-    #    print("Une erreur est survenue")
-    #    client.close()
-    #    quit = True
-    #    break

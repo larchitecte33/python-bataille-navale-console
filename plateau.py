@@ -16,22 +16,13 @@ class Plateau:
 
     # Affichage du plateau
     def afficher(self):
-        #print(dir(self))
-
         if hasattr(self, "_Plateau__joueur"):
             bateaux = self.__joueur.get_bateaux()
 
             for i in range(0, len(bateaux)):
                 if bateaux[i].get_coule():
-                    #print("Coulé - x_deb : ", bateaux[i].get_x_deb())
-                    #print("Coulé - x_fin : ", bateaux[i].get_x_fin())
-                    #print("Coulé - y_deb : ", bateaux[i].get_y_deb())
-                    #print("Coulé - y_fin : ", bateaux[i].get_y_fin())
-
                     for j in range(bateaux[i].get_x_deb(), bateaux[i].get_x_fin() + 1):
                         for k in range(bateaux[i].get_y_deb(), bateaux[i].get_y_fin() + 1):
-                            #print("j = ", j)
-                            #print("k = ", k)
                             self.__cases[j][k].set_numero_occupant(10)     
 
         
@@ -52,8 +43,6 @@ class Plateau:
                     ligne += ','
 
                 if(self.__cases[i][j].get_touchee() == True):
-                    #print("N° occupant : ", self.__cases[i][j].get_numero_occupant())
-
                     if self.__cases[i][j].get_numero_occupant() == 10:
                         ligne += 'C'
                     elif self.__cases[i][j].get_numero_occupant() > 0:
