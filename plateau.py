@@ -7,12 +7,16 @@ class Plateau:
         self.__cases = cases
         self.__nb_lignes = nb_lignes
         self.__nb_colonnes = nb_colonnes
+        self.__lbl_nb_bateaux_coules = ''
 
     def get_case(self, x, y):
         return self.__cases[x][y]
 
     def set_joueur(self, joueur):
         self.__joueur = joueur
+
+    def set_lbl_nb_bateaux_coules(self, lbl_nb_bateaux_coules):
+        self.__lbl_nb_bateaux_coules = lbl_nb_bateaux_coules
 
     # Affichage du plateau
     def afficher(self):
@@ -36,6 +40,8 @@ class Plateau:
 
         print(ligne)
 
+        ligne_aff_nb_bateaux_coules = self.__nb_lignes // 2 # Division entière de self.__nb_lignes par 2
+
         for j in range(self.__nb_lignes):
             ligne = str(j) + ' '
             for i in range(self.__nb_colonnes):
@@ -53,6 +59,10 @@ class Plateau:
                     ligne += str(self.__cases[i][j].get_numero_occupant())
                 else:
                     ligne += '-'
+
+            if j == ligne_aff_nb_bateaux_coules:
+                ligne += '           ' + self.__lbl_nb_bateaux_coules
+
             print(ligne)
             ligne = ''
     

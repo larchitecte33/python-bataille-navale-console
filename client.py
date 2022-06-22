@@ -103,6 +103,7 @@ while not quit:
                 print("Coulé !!!")
                 j.set_occupe(int(position_tir[0]), int(position_tir[2]))
                 nb_coule = nb_coule + 1
+                j.set_nb_bateaux_adversaire_coules(nb_coule)
 
                 if nb_coule >= 5:
                     print("Vous avez gagné !")

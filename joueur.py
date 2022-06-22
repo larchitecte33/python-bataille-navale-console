@@ -14,9 +14,13 @@ class Joueur:
         self.__plateau_adversaire = NULL
         self.__bateaux = []
         self.__cases_attaquees = []
+        self.__nb_bateaux_adversaire_coules = 0
 
     def get_bateaux(self): 
         return self.__bateaux
+
+    def set_nb_bateaux_adversaire_coules(self, nb_bateaux_adversaire_coules):
+        self.__nb_bateaux_adversaire_coules = nb_bateaux_adversaire_coules
 
     def get_bateau(self, x, y):
         i = 0
@@ -78,8 +82,10 @@ class Joueur:
     # Permet d'afficher le plateau du joueur
     def afficher_plateau(self):
         print('PLATEAU ADVERSAIRE')
+        self.__plateau_adversaire.set_lbl_nb_bateaux_coules('Nb bateaux coulés : ' + str(self.__nb_bateaux_adversaire_coules))
         self.__plateau_adversaire.afficher()
         print('VOTRE PLATEAU')
+        self.__plateau.set_lbl_nb_bateaux_coules('')
         self.__plateau.afficher()
         print('')
 
