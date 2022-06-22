@@ -13,6 +13,7 @@ class Joueur:
         self.__plateau = NULL
         self.__plateau_adversaire = NULL
         self.__bateaux = []
+        self.__cases_attaquees = []
 
     def get_bateaux(self): 
         return self.__bateaux
@@ -82,12 +83,23 @@ class Joueur:
         self.__plateau.afficher()
         print('')
 
+    # Le plateau du joueur est-il occupé en position (x, y)
     def est_occupe(self, x, y):
         return self.__plateau.get_case(x, y).get_numero_occupant() > 0
 
+    # Permet d'occuper le plateau du joueur en position (x, y)
     def set_occupe(self, x, y):
-        self.__plateau_adversaire.get_case(x, y).set_touchee(True)
-        self.__plateau_adversaire.get_case(x, y).set_numero_occupant(1)
+        try:
+            index = self.__cases_attaquees.index(str(x) + '-' + str(y)) 
+            print('Cette case a déjé été jouée.')
+        except ValueError:
+            self.__plateau_adversaire.get_case(x, y).set_touchee(True)
+            self.__plateau_adversaire.get_case(x, y).set_numero_occupant(1)
+            self.__cases_attaquees.append(str(x) + '-' + str(y))
+
+    # Permet de savoir si le plateau du joueur est toouché en (x, y)
+    def est_touche(self, x, y):
+        return self.__plateau.get_case(x, y).get_touchee()
 
 
     # Permet de réceptionner un tir sur le plateau du joueur

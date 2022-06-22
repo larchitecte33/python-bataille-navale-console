@@ -43,8 +43,8 @@ def jouer():
     num_joueur = 1
 
     while True:
-        envoi_reception.reception(clients[1], 'joueur2', 'message_client_1', True)
         envoi_reception.reception(clients[0], 'joueur1', 'message_client_0', True)
+        envoi_reception.reception(clients[1], 'joueur2', 'message_client_1', True)
         
         envoi_reception.envoi(clients[1], 'joueur2', str(num_joueur), True)
         envoi_reception.envoi(clients[0], 'joueur1', str(num_joueur), True)
@@ -64,7 +64,7 @@ def jouer():
 
                 envoi_reception.envoi(clients[0], 'joueur1', is_touche, True) 
                 
-                if is_touche != "C" and is_touche != "X":
+                if is_touche != "C" and is_touche != "X" and is_touche != "T":
                     num_joueur = 2
             else:
                 envoi_reception.envoi(clients[0], 'joueur1', position_tir, True)
@@ -73,7 +73,7 @@ def jouer():
 
                 envoi_reception.envoi(clients[1], 'joueur2', is_touche, True)
 
-                if is_touche != "C" and is_touche != "X":
+                if is_touche != "C" and is_touche != "X" and is_touche != "T":
                     num_joueur = 1
 
 

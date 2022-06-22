@@ -55,18 +55,21 @@ while not quit:
         position_tir = envoi_reception.reception(client, nom_joueur, 'position_tir', False)
 
         if position_tir != "-:-":
-            is_coule = j.attaquer(int(position_tir[0]), int(position_tir[2]))       
+            if j.est_touche(int(position_tir[0]), int(position_tir[2])):
+                envoi_reception.envoi(client, 'serveur', 'T', False)
+            else:
+                is_coule = j.attaquer(int(position_tir[0]), int(position_tir[2]))       
 
-        if is_coule:
-            envoi_reception.envoi(client, 'serveur', 'C', False)
-        elif j.est_occupe(int(position_tir[0]), int(position_tir[2])):
-            envoi_reception.envoi(client, 'serveur', 'X', False)
-        else:
-            envoi_reception.envoi(client, 'serveur', '+', False)
+                if is_coule:
+                    envoi_reception.envoi(client, 'serveur', 'C', False)
+                elif j.est_occupe(int(position_tir[0]), int(position_tir[2])):
+                    envoi_reception.envoi(client, 'serveur', 'X', False) 
+                else:
+                    envoi_reception.envoi(client, 'serveur', '+', False)
 
-        if j.verif_perdu():
-            print('Vous avez perdu.')
-            quit = True
+            if j.verif_perdu():
+                print('Vous avez perdu.')
+                quit = True
 
         j.afficher_plateau()
     else:
@@ -94,7 +97,9 @@ while not quit:
             envoi_reception.envoi(client, 'serveur', position_tir, False)
             est_touche = envoi_reception.reception(client, nom_joueur, 'est_touche', False)
 
-            if est_touche == "C":
+            if est_touche == "T":
+                print("Cette case a déjà été attaquée.")
+            elif est_touche == "C":
                 print("Coulé !!!")
                 j.set_occupe(int(position_tir[0]), int(position_tir[2]))
                 nb_coule = nb_coule + 1
